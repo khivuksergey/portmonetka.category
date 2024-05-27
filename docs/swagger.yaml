@@ -1,0 +1,199 @@
+basePath: /
+definitions:
+  entity.CategoryType:
+    enum:
+    - INCOME
+    - EXPENSE
+    type: string
+    x-enum-varnames:
+    - Income
+    - Expense
+  model.CategoryCreateDTO:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/entity.CategoryType'
+        enum:
+        - INCOME
+        - EXPENSE
+      userId:
+        type: integer
+    required:
+    - name
+    - type
+    type: object
+  model.CategoryDeleteDTO:
+    properties:
+      id:
+        type: integer
+      userId:
+        type: integer
+    type: object
+  model.CategoryUpdateDTO:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      userId:
+        type: integer
+    type: object
+  model.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      request_uuid:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Categories service.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Portmonetka category service
+paths:
+  /users/{userId}/categories:
+    get:
+      consumes:
+      - application/json
+      description: Gets user's categories
+      operationId: get-categories
+      parameters:
+      - description: Authorized user ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Categories retrieved
+          schema:
+            $ref: '#/definitions/model.Response'
+        "422":
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get user's categories
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: Creates a new category with the provided information
+      operationId: create-category
+      parameters:
+      - description: Authorized user ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: Category object to be created
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/model.CategoryCreateDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Category created
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "422":
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Create a new category
+      tags:
+      - Category
+  /users/{userId}/categories/{categoryId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes category by the provided category ID
+      operationId: delete-category
+      parameters:
+      - description: Authorized user ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: Category delete request
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/model.CategoryDeleteDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "422":
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Delete category
+      tags:
+      - Category
+    patch:
+      consumes:
+      - application/json
+      description: Updates category's properties
+      operationId: update-category
+      parameters:
+      - description: Authorized user ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: Category update attributes
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/model.CategoryUpdateDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category updated
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "422":
+          description: Unprocessable entity
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Update category
+      tags:
+      - Category
+schemes:
+- http
+- https
+swagger: "2.0"
